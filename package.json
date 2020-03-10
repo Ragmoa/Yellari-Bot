@@ -1,0 +1,15 @@
+{
+  "name": "yellari-bot",
+  "version": "1.0.0",
+  "description": "A Discord bot for the minish cap randomizer races",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Rylux",
+  "license": "GNU General Public License v3.0",
+  "dependencies": {
+    "discord.js": "^12.0.2",
+    "googleapis": "^47.0.0"
+  }
+}
