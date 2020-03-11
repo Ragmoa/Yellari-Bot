@@ -2,7 +2,7 @@ const Discord = require('discord.js');
 const client = new Discord.Client();
 const {google} = require('googleapis');
 const calendar =google.calendar('v3');
-const API_KEY="[YOUR_GAPI_KEY]";
+const API_KEY=process.env.GAPI_TOKEN;
 
 
 
@@ -83,4 +83,4 @@ function dhm(t){
 	};
 }
 
-client.login('YOUR_DISCORD_BOT_KEY');
+client.login(process.env.BOT_TOKEN);
