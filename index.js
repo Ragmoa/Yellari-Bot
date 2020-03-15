@@ -5,7 +5,6 @@ const calendar =google.calendar('v3');
 const API_KEY=process.env.GAPI_TOKEN;
 
 
-
 client.once('ready', () => {
 
 	console.log('[INIT] Ready!!');
@@ -20,7 +19,8 @@ client.on('message', message => {
   if (message.content.toLowerCase()==='!weekly'){
 
 		var answer='';
-
+		filterDate=new Date()
+		filterDate.setHours(filterDate.getHours()+4);
 		let calendarPromise=calendar.events.list({
 			"auth" : API_KEY,
 			"calendarId" : "zsrstaff@gmail.com",
@@ -28,9 +28,8 @@ client.on('message', message => {
 			"orderBy" : "startTime",
 			"q" : "Minish Cap Randomizer Weekly",
 			"singleEvents" : true,
-			"timeMin" : (new Date()).toISOString()
+			"timeMin" : filterDate.toISOString()
 		});
-
 		calendarPromise.then(function(result){
 			if (result.status!=200){
 				console.log ('Error '+result.statusText);
