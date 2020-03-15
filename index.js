@@ -3,14 +3,13 @@ const client = new Discord.Client();
 const {google} = require('googleapis');
 const calendar =google.calendar('v3');
 const API_KEY=process.env.GAPI_TOKEN;
+const unitariumBaseLink='http://time.unitarium.com/utc/'
 
 
 client.once('ready', () => {
-
+	client.user.setActivity('the ZSR calendar',{type:'WATCHING'});
 	console.log('[INIT] Ready!!');
 });
-
-
 
 client.on('message', message => {
 
@@ -45,8 +44,8 @@ client.on('message', message => {
 				let now=new Date();
 				let neGap=dhm(neStartDate-now);
 			 	embed.setTitle('Next weekly is in '+ neGap.days+' days, '+neGap.hours+' hours, and ' +neGap.minutes+ ' minutes')
-				embed.setDescription("Restream will be on: "+neTwitchChannel+"\n\n");
-				embed.setURL(neTwitchChannel);
+				embed.setDescription("Restream will be on: "+neTwitchChannel+"\n\nRace starts on the "+pad(neStartDate.getUTCDate())+'/'+pad(neStartDate.getUTCMonth()+1)+', at '+ pad(neStartDate.getUTCHours()) + ':' +pad(neStartDate.getUTCMinutes()) +' UTC');
+				embed.setURL(unitariumBaseLink+pad(neStartDate.getUTCHours())+pad(neStartDate.getUTCMinutes()));
 				// "YELLARI" YELLOW 4 THE WIN
 				embed.setColor(0xffad21);
 				message.channel.send(embed);
@@ -65,8 +64,8 @@ function dhm(t){
         ch = 60 * 60 * 1000,
         d = Math.floor(t / cd),
         h = Math.floor( (t - d * cd) / ch),
-        m = Math.round( (t - d * cd - h * ch) / 60000),
-        pad = function(n){ return n < 10 ? '0' + n : n; };
+        m = Math.round( (t - d * cd - h * ch) / 60000);
+
   if( m === 60 ){
     h++;
     m = 0;
@@ -80,6 +79,10 @@ function dhm(t){
 		'hours':pad(h),
 		'minutes':pad(m)
 	};
+}
+
+function pad (n){
+	return n < 10 ? '0' + n : n;
 }
 
 client.login(process.env.BOT_TOKEN);
