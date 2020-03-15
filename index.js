@@ -18,8 +18,8 @@ client.on('message', message => {
   if (message.content.toLowerCase()==='!weekly'){
 
 		var answer='';
-		filterDate=new Date()
-		filterDate.setHours(filterDate.getHours()+4);
+		// filterDate=new Date()
+		// filterDate.setHours(filterDate.getHours()+4);
 		let calendarPromise=calendar.events.list({
 			"auth" : API_KEY,
 			"calendarId" : "zsrstaff@gmail.com",
@@ -27,7 +27,7 @@ client.on('message', message => {
 			"orderBy" : "startTime",
 			"q" : "Minish Cap Randomizer Weekly",
 			"singleEvents" : true,
-			"timeMin" : filterDate.toISOString()
+			"timeMin" : new Date().toISOString()
 		});
 		calendarPromise.then(function(result){
 			if (result.status!=200){
@@ -43,12 +43,21 @@ client.on('message', message => {
 				let neTwitchChannel=neDescription.match(/(https:\/\/twitch\.tv\/[^\s\"]*)/m)[0];
 				let now=new Date();
 				let neGap=dhm(neStartDate-now);
+				if (now>neStartDate){
+					let neGap=dhm(now-neStartDate);
+					embed.setTitle('Weekly is currently underway!')
+					embed.setDescription('Weekly started ' +neGap.hours+' hours, ' +neGap.minutes+ ' minutes ago\n\n Head to '+ neTwitchChannel+' to watch it!')
+					embed.setURL(neTwitchChannel);
+					embed.setColor(0xffad21);
+					message.channel.send(embed);
+				} else {
 			 	embed.setTitle('Next weekly is in '+ neGap.days+' days, '+neGap.hours+' hours, and ' +neGap.minutes+ ' minutes')
 				embed.setDescription("Restream will be on: "+neTwitchChannel+"\n\nRace starts on the "+pad(neStartDate.getUTCDate())+'/'+pad(neStartDate.getUTCMonth()+1)+', at '+ pad(neStartDate.getUTCHours()) + ':' +pad(neStartDate.getUTCMinutes()) +' UTC');
 				embed.setURL(unitariumBaseLink+pad(neStartDate.getUTCHours())+pad(neStartDate.getUTCMinutes()));
 				// "YELLARI" YELLOW 4 THE WIN
 				embed.setColor(0xffad21);
 				message.channel.send(embed);
+			}
 			} else {
 				embed.setTitle('Didn\'t find any weekly!')
 				.setColor(0xff0000)
@@ -84,5 +93,4 @@ function dhm(t){
 function pad (n){
 	return n < 10 ? '0' + n : n;
 }
-
 client.login(process.env.BOT_TOKEN);
