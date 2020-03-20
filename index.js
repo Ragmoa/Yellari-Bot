@@ -16,10 +16,7 @@ client.on('message', message => {
 	const embed = new Discord.MessageEmbed()
   // Calling !weekly
   if (message.content.toLowerCase()==='!weekly'){
-
 		var answer='';
-		// filterDate=new Date()
-		// filterDate.setHours(filterDate.getHours()+4);
 		let calendarPromise=calendar.events.list({
 			"auth" : API_KEY,
 			"calendarId" : "zsrstaff@gmail.com",
@@ -65,6 +62,58 @@ client.on('message', message => {
 				}
 			}
 		});
+  } else if (message.content.startsWith('!utc')) {
+
+			let hours24;
+			let hourstab=message.content.split(' ');
+			if (hourstab.length>1){
+				hours=hourstab[1];
+			if (hours.includes('pm')){
+					let hours12=parseInt(hours.split('pm')[0]);
+					if (hours12 && hours12 <12){
+						hours24=hours12+12;
+					}
+			} else if (hours.includes('am')) {
+					let hours12=parseInt(hours.split('am')[0]);
+					if (hours12 && hours12 <12){
+						hours24=hours12;
+					}
+			} else {
+				h24=parseInt(hours);
+				if (h24 && h24 <24){
+					hours24=h24;
+					hours+='h';
+				}
+			}
+			if (hours24){
+				let now=new Date();
+				let utcDate=new Date();
+				utcDate.setUTCHours(hours24);
+				utcDate.setUTCMinutes(0);
+				utcDate.setUTCSeconds(0);
+				if (utcDate<now){
+					utcDate.setDate(utcDate.getDate()+1)
+				}
+				let gap=dhm(utcDate-now);
+				let title=hours;
+				title+=' UTC is in: ' +gap.hours +' hours and '+ gap.minutes + ' minutes';
+				embed.setTitle(title)
+				embed.setColor(0xffad21);
+				embed.setURL(unitariumBaseLink+pad(utcDate.getUTCHours()));
+				message.channel.send(embed);
+
+		} else {
+			embed.setTitle('I didn\'t understand the time you gave me.')
+			embed.setDescription("Please use one of these formats:\n    - XXam\n    - XXpm\n    - XX    (24hr format)");
+			embed.setColor(0xff0000);
+			message.channel.send(embed);
+		}
+	} else {
+		embed.setTitle('I didn\'t understand the time you gave me.')
+		embed.setDescription("Please use one of these formats:\n    - XXam\n    - XXpm\n    - XX    (24hr format)");
+		embed.setColor(0xff0000);
+		message.channel.send(embed);
+	}
   }
 })
 
