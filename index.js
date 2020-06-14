@@ -35,6 +35,7 @@ client.on('message', message => {
 			} else {
 				if (result.data.items.length){
 				let nextEvent=result.data.items[0];
+				let neTitle=nextEvent.summary;
 				let neStartDate=new Date(nextEvent.start.dateTime);
 				let neDescription=nextEvent.description;
 				let neTwitchChannel=neDescription.match(/(https:\/\/twitch\.tv\/[^\s\"]*)/m)[0];
@@ -49,7 +50,13 @@ client.on('message', message => {
 					message.channel.send(embed);
 				} else {
 			 	embed.setTitle('Next weekly is in '+ neGap.days+' days, '+neGap.hours+' hours, and ' +neGap.minutes+ ' minutes')
-				embed.setDescription("Restream will be on: "+neTwitchChannel+"\n\nRace starts on the "+pad(neStartDate.getUTCDate())+'/'+pad(neStartDate.getUTCMonth()+1)+', at '+ pad(neStartDate.getUTCHours()) + ':' +pad(neStartDate.getUTCMinutes()) +' UTC');
+				if (neTitle.includes("Variety")){
+					neDesc2=neDescription.replace("<br>","\n\r");
+					neVarietySettings=neDesc2.match(/(This\ month's.*:.*)/)[0];
+					embed.setDescription("Next Weekly is the Variety Race!\n" + neVarietySettings + "\n\nRestream will be on: "+neTwitchChannel+"\n\nRace starts on the "+pad(neStartDate.getUTCDate())+'/'+pad(neStartDate.getUTCMonth()+1)+', at '+ pad(neStartDate.getUTCHours()) + ':' +pad(neStartDate.getUTCMinutes()) +' UTC');
+				} else {
+					embed.setDescription("Restream will be on: "+neTwitchChannel+"\n\nRace starts on the "+pad(neStartDate.getUTCDate())+'/'+pad(neStartDate.getUTCMonth()+1)+', at '+ pad(neStartDate.getUTCHours()) + ':' +pad(neStartDate.getUTCMinutes()) +' UTC');
+				}
 				embed.setURL(unitariumBaseLink+pad(neStartDate.getUTCHours())+pad(neStartDate.getUTCMinutes()));
 				// "YELLARI" YELLOW 4 THE WIN
 				embed.setColor(0xffad21);
