@@ -3,7 +3,8 @@ const client = new Discord.Client();
 const {google} = require('googleapis');
 const calendar =google.calendar('v3');
 const API_KEY=process.env.GAPI_TOKEN;
-const unitariumBaseLink='http://time.unitarium.com/utc/'
+const unitariumBaseLink='http://time.unitarium.com/utc/';
+const racingAnnnouncementsId=process.env.RACING_ANNOUNCEMENTS_CHANNEL_ID;
 
 
 client.once('ready', () => {
@@ -52,8 +53,16 @@ client.on('message', message => {
 			 	embed.setTitle('Next weekly is in '+ neGap.days+' days, '+neGap.hours+' hours, and ' +neGap.minutes+ ' minutes')
 				if (neTitle.includes("Variety")){
 					neDesc2=neDescription.replace("<br>","\n\r");
-					neVarietySettings=neDesc2.match(/(This\ month's.*:.*)/)[0];
-					embed.setDescription("Next Weekly is the Variety Race!\n" + neVarietySettings + "\n\nRestream will be on: "+neTwitchChannel+"\n\nRace starts on the "+pad(neStartDate.getUTCDate())+'/'+pad(neStartDate.getUTCMonth()+1)+', at '+ pad(neStartDate.getUTCHours()) + ':' +pad(neStartDate.getUTCMinutes()) +' UTC');
+					if (neDesc2.match(/(This\ month's.*:.*)/) && neDesc2.match(/(This\ month's.*:.*)/).length>0){
+						neVarietySettings=neDesc2.match(/(This\ month's.*:.*)/)[0];
+						embed.setDescription("Next Weekly is the Variety Race!\n" + neVarietySettings + "\n\nRestream will be on: "+neTwitchChannel+"\n\nRace starts on the "+pad(neStartDate.getUTCDate())+'/'+pad(neStartDate.getUTCMonth()+1)+', at '+ pad(neStartDate.getUTCHours()) + ':' +pad(neStartDate.getUTCMinutes()) +' UTC');
+					} else {
+						var channel='<#'+racingAnnnouncementsId+'>';
+						embed.setDescription("Next Weekly is the Variety Race! \n"+
+						"Check "+ channel +" for more info about the settings."+
+						" \n\nRestream will be on: "+neTwitchChannel+
+						"\n\nRace starts on the "+pad(neStartDate.getUTCDate())+'/'+pad(neStartDate.getUTCMonth()+1)+', at '+ pad(neStartDate.getUTCHours()) + ':' +pad(neStartDate.getUTCMinutes()) +' UTC');
+					}
 				} else {
 					embed.setDescription("Restream will be on: "+neTwitchChannel+"\n\nRace starts on the "+pad(neStartDate.getUTCDate())+'/'+pad(neStartDate.getUTCMonth()+1)+', at '+ pad(neStartDate.getUTCHours()) + ':' +pad(neStartDate.getUTCMinutes()) +' UTC');
 				}
