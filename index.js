@@ -39,7 +39,7 @@ client.on('message', message => {
 				let neTitle=nextEvent.summary;
 				let neStartDate=new Date(nextEvent.start.dateTime);
 				let neDescription=nextEvent.description;
-				let neTwitchChannel=neDescription.match(/(https:\/\/twitch\.tv\/[^\s\"]*)/m)[0];
+				let neTwitchChannel=neDescription.match(/(https:\/\/(w{3}\.)?twitch\.tv\/[^\s\"]*)/m)[0];
 				let now=new Date();
 				let neGap=dhm(neStartDate-now);
 				if (now>neStartDate){
