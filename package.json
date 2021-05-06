@@ -9,7 +9,7 @@
   "author": "Rylux",
   "license": "GNU General Public License v3.0",
   "dependencies": {
-    "discord.js": "^12.0.2",
+    "discord.js": "^12.5.3",
     "googleapis": "^47.0.0"
   }
 }
