@@ -6,7 +6,7 @@ const API_KEY=process.env.GAPI_TOKEN;
 const unitariumBaseLink='http://time.unitarium.com/utc/';
 const racingAnnnouncementsId=process.env.RACING_ANNOUNCEMENTS_CHANNEL_ID;
 const randoInfoId=process.env.RANDO_INFO_CHANNEL_ID;
-const faqCounter=0;
+var faqCounter=0+env.FAQ_COUNTER;
 
 
 client.once('ready', () => {
@@ -127,16 +127,16 @@ client.on('message', message => {
 		}
 	} else {
 		let now=new Date();
-		let title = "It's " + now.getUTCHours() +" h "+ now.getUTCMinutes() + " in UTC."
+		let title = "It's " + now.getUTCHours() +":"+ now.getUTCMinutes() + " in UTC."
 		embed.setTitle(title)
-		var hours = date.getUTCHours();
-  	var minutes = date.getUTCMinutes();
-  	var ampm = hours >= 12 ? 'pm' : 'am';
-  	hours = hours % 12;
-  	hours = hours ? hours : 12; // the hour '0' should be '12'
-  	minutes = minutes < 10 ? '0'+minutes : minutes;
-  	var strTime = hours + ':' + minutes + ' ' + ampm;
-		embed.setDescription(now.getUTCHours()+" h "+ now.getUTCMinutes()+" / "+strTime);
+		var hours = now.getUTCHours();
+		var minutes = now.getUTCMinutes();
+		var ampm = hours >= 12 ? 'pm' : 'am';
+		hours = hours % 12;
+		hours = hours ? hours : 12; // the hour '0' should be '12'
+		minutes = minutes < 10 ? '0'+minutes : minutes;
+		var strTime = hours + ':' + minutes + ' ' + ampm;
+		embed.setDescription(now.getUTCHours()+":"+ now.getUTCMinutes()+" / "+strTime);
 		embed.setColor(0xffad21);
 		message.channel.send(embed);
 	}
@@ -147,17 +147,6 @@ client.on('message', message => {
 	embed.setDescription('Number of times called: ' +faqCounter);
 	embed.setColor(0xffad21);
 	message.channel.send(embed);
-} else if (message.content.startsWith('!casual')){
-	var now=new Date();
-	let weekDay=now.getUTCDay();
-	if (weekDay!=3 || (now.getUTCHours==18 && now.getUTCMinutes>=15){
-		let weekGap=weekDay-3;
-		if (weekGap<0){
-			weekGap+=7;
-		}
-		let nextCasual=now.getDate()+weekGap;
-
-	}
 }
 })
 
