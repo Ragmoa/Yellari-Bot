@@ -142,9 +142,9 @@ client.on('message', message => {
 	}
 } else if (message.content.startsWith('!faq')){
 	var channel='<#'+randoInfoId+'>';
-	embed.setTitle('To get started with the randomizer, please read our FAQ and startup guide in '+channel)
+	embed.setTitle('To get started with the randomizer, please read our FAQ and startup guide.')
 	faqCounter++;
-	embed.setDescription('Number of times called: ' +faqCounter);
+	embed.setDescription('You can find them in '+channel+".\n\n Number of times called: " +faqCounter);
 	embed.setColor(0xffad21);
 	message.channel.send(embed);
 }
