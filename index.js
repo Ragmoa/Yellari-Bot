@@ -6,7 +6,7 @@ const API_KEY=process.env.GAPI_TOKEN;
 const unitariumBaseLink='http://time.unitarium.com/utc/';
 const racingAnnnouncementsId=process.env.RACING_ANNOUNCEMENTS_CHANNEL_ID;
 const randoInfoId=process.env.RANDO_INFO_CHANNEL_ID;
-var faqCounter=0+env.FAQ_COUNTER;
+var faqCounter=0+process.env.FAQ_COUNTER;
 
 
 client.once('ready', () => {
