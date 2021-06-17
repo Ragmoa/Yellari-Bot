@@ -134,7 +134,7 @@ client.on('message', message => {
 
 		} else {
 			embed.setTitle('I didn\'t understand the time you gave me.')
-			embed.setDescription("Please use one of these formats:\n    - XXam\n    - XXpm\n    - XX    (24hr format)");
+			embed.setDescription("Please use one of these formats:\n    - XX(:XX) am\n    - XX(:XX) pm\n    - XX(:XX)    (24hr format)");
 			embed.setColor(0xff0000);
 			message.channel.send(embed);
 		}
