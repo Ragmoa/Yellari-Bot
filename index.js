@@ -83,36 +83,49 @@ client.on('message', message => {
   } else if (message.content.startsWith('!utc')) {
 			let hours24;
 			let hourstab=message.content.split(' ');
-			if (hourstab.length>1){
-				hours=hourstab[1];
-			if (hours.includes('pm')){
-					let hours12=parseInt(hours.split('pm')[0]);
-					if (hours12 && hours12 <12){
-						hours24=hours12+12;
+			let suffix='';
+			if (hourstab.length==3){
+				suffix=hourstab[2];
+			}
+			if (hourstab.length >= 2){
+					time=hourstab[1];
+					if (time.includes(':')){
+						  let hourstab2=time.split(':');
+							minutes=hourstab2[1];
+								hours=hourstab2[0];
+					  } else {
+							minutes=0;
+						  hours=hourstab[1];
 					}
-			} else if (hours.includes('am')) {
-					let hours12=parseInt(hours.split('am')[0]);
-					if (hours12 && hours12 <12){
-						hours24=hours12;
+			if (suffix=='pm'){
+					if (hours>0 && hours <=12){
+						hours24=hours+12;
+					}
+			} else if (suffix=='am') {
+					if (hours>0 && hours <=12){
+						hours24=hours;
 					}
 			} else {
 				h24=parseInt(hours);
 				if (h24 && h24 <24){
 					hours24=h24;
-					hours+='h';
 				}
 			}
 			if (hours24){
 				let now=new Date();
 				let utcDate=new Date();
 				utcDate.setUTCHours(hours24);
-				utcDate.setUTCMinutes(0);
+				utcDate.setUTCMinutes(minutes);
 				utcDate.setUTCSeconds(0);
 				if (utcDate<now){
 					utcDate.setDate(utcDate.getDate()+1)
 				}
 				let gap=dhm(utcDate-now);
-				let title=hours;
+				if (suffix=='am' || suffix=="pm"){
+					title=hours + ':' + pad(minutes) + ' ' + suffix;
+				} else {
+					title=hours + ':' + pad(minutes);
+				}
 				title+=' UTC is in: ' +gap.hours +' hours and '+ gap.minutes + ' minutes';
 				embed.setTitle(title)
 				embed.setColor(0xffad21);
@@ -127,16 +140,15 @@ client.on('message', message => {
 		}
 	} else {
 		let now=new Date();
-		let title = "It's " + now.getUTCHours() +":"+ now.getUTCMinutes() + " in UTC."
+		let title = "It's " + now.getUTCHours() +":"+ pad(now.getUTCMinutes()) + " in UTC."
 		embed.setTitle(title)
 		var hours = now.getUTCHours();
 		var minutes = now.getUTCMinutes();
 		var ampm = hours >= 12 ? 'pm' : 'am';
 		hours = hours % 12;
 		hours = hours ? hours : 12; // the hour '0' should be '12'
-		minutes = minutes < 10 ? '0'+minutes : minutes;
-		var strTime = hours + ':' + minutes + ' ' + ampm;
-		embed.setDescription(now.getUTCHours()+":"+ now.getUTCMinutes()+" / "+strTime);
+		var strTime = hours + ':' + pad(minutes) + ' ' + ampm;
+		embed.setDescription(now.getUTCHours()+":"+ pad(now.getUTCMinutes())+" / "+strTime);
 		embed.setColor(0xffad21);
 		message.channel.send(embed);
 	}
