@@ -99,7 +99,7 @@ client.on('message', message => {
 					}
 			if (suffix=='pm'){
 					if (hours>0 && hours <=12 && minutes >=0 && minutes <=59){
-						hours24=pareseInt(hours,10)+12;
+						hours24=parseInt(hours,10)+12;
 					}
 			} else if (suffix=='am') {
 					if (hours>0 && hours <=12 && minutes >=0 && minutes <=59){
@@ -122,9 +122,9 @@ client.on('message', message => {
 				}
 				let gap=dhm(utcDate-now);
 				if (suffix=='am' || suffix=="pm"){
-					title=hours + ':' + pad(minutes) + ' ' + suffix;
+					title=pad(parseInt(hours)) + ':' + pad(minutes) + ' ' + suffix;
 				} else {
-					title=hours + ':' + pad(minutes);
+					title=pad(parseInt(hours)) + ':' + pad(minutes);
 				}
 				title+=' UTC is in: ' +gap.hours +' hours and '+ gap.minutes + ' minutes';
 				embed.setTitle(title)
