@@ -91,23 +91,23 @@ client.on('message', message => {
 					time=hourstab[1];
 					if (time.includes(':')){
 						  let hourstab2=time.split(':');
-							minutes=hourstab2[1];
+							minutes=parseInt(hourstab2[1]);
 								hours=hourstab2[0];
 					  } else {
 							minutes=0;
 						  hours=hourstab[1];
 					}
 			if (suffix=='pm'){
-					if (hours>0 && hours <=12){
-						hours24=hours+12;
+					if (hours>0 && hours <=12 && minutes >=0 && minutes <=59){
+						hours24=pareseInt(hours,10)+12;
 					}
 			} else if (suffix=='am') {
-					if (hours>0 && hours <=12){
-						hours24=hours;
+					if (hours>0 && hours <=12 && minutes >=0 && minutes <=59){
+						hours24=parseInt(hours,10);
 					}
 			} else {
-				h24=parseInt(hours);
-				if (h24 && h24 <24){
+				h24=parseInt(hours,10);
+				if (h24 && h24 <24 && minutes >=0 && minutes <=59){
 					hours24=h24;
 				}
 			}
