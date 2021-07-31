@@ -9,7 +9,8 @@
   "author": "Rylux",
   "license": "GNU General Public License v3.0",
   "dependencies": {
-    "discord.js": "^12.5.3",
+    "discord-slash-commands-client": "^1.2.1",
+    "discord.js": "github:MatteZ02/discord.js",
     "googleapis": "^73.0.0"
   }
 }
