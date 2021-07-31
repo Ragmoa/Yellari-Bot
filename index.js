@@ -1,4 +1,4 @@
-const { Client, Intents } = require('discord.js');
+const { Client, Intents, MessageEmbed } = require('discord.js');
 const interactions = require ("discord-slash-commands-client")
 // console.log(Intents.FLAGS.GUILDS);
 const client = new Client({intents: [Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.DIRECT_MESSAGES]});
@@ -7,10 +7,11 @@ const calendar =google.calendar('v3');
 const API_KEY=process.env.GAPI_TOKEN;
 const BOT_TOKEN=process.env.BOT_TOKEN;
 const BOT_ID=process.env.BOT_ID;
+const randoInfoId=process.env.RANDO_INFO_CHANNEL_ID;
 
 const unitariumBaseLink='http://time.unitarium.com/utc/';
 const racingAnnnouncementsId=process.env.RACING_ANNOUNCEMENTS_CHANNEL_ID;
-const randoInfoId=process.env.RANDO_INFO_CHANNEL_ID;
+
 var faqCounter=0+process.env.FAQ_COUNTER;
 const commandList=[
 	{
@@ -59,11 +60,10 @@ client.once('ready', () => {
 	console.log('[INIT] Ready!!');
 });
 
-client.on('message', message => {
-
-	const embed = new Discord.MessageEmbed()
-  // Calling !weekly
-  if (message.content.toLowerCase()==='!weekly'){
+client.on('interactionCreate', interaction => {
+	const embed = new MessageEmbed()
+  // Calling /weekly
+  if (interaction.commandName==='weekly'){
 		var answer='';
 		let calendarPromise=calendar.events.list({
 			"auth" : API_KEY,
@@ -116,18 +116,18 @@ client.on('message', message => {
 				embed.setURL(unitariumBaseLink+pad(neStartDate.getUTCHours())+pad(neStartDate.getUTCMinutes()));
 				// "YELLARI" YELLOW 4 THE WIN
 				embed.setColor(0xffad21);
-				message.channel.send(embed);
+			  interaction.reply({embeds:[embed]});
 			}
 			} else {
 				embed.setTitle('Didn\'t find any weekly!')
 				.setColor(0xff0000)
-				  message.channel.send(embed);
+				  interaction.reply({embeds:[embed]});
 				}
 			}
 		});
-  } else if (message.content.startsWith('!utc')) {
+  } else if (interaction.commandName === "utc") {
 			let hours24;
-			let hourstab=message.content.split(' ');
+			let hourstab=interaction.content.split(' ');
 			let suffix='';
 			if (hourstab.length==3){
 				suffix=hourstab[2];
@@ -175,13 +175,13 @@ client.on('message', message => {
 				embed.setTitle(title)
 				embed.setColor(0xffad21);
 				embed.setURL(unitariumBaseLink+pad(utcDate.getUTCHours()));
-				message.channel.send(embed);
+				interaction.reply({embeds:[embed]});
 
 		} else {
 			embed.setTitle('I didn\'t understand the time you gave me.')
 			embed.setDescription("Please use one of these formats:\n    - XX(:XX) am\n    - XX(:XX) pm\n    - XX(:XX)    (24hr format)");
 			embed.setColor(0xff0000);
-			message.channel.send(embed);
+			interaction.reply({embeds:[embed]});
 		}
 	} else {
 		let now=new Date();
@@ -195,15 +195,15 @@ client.on('message', message => {
 		var strTime = hours + ':' + pad(minutes) + ' ' + ampm;
 		embed.setDescription(now.getUTCHours()+":"+ pad(now.getUTCMinutes())+" / "+strTime);
 		embed.setColor(0xffad21);
-		message.channel.send(embed);
+		interaction.reply({embeds:[embed]});
 	}
-} else if (message.content.startsWith('!faq')){
+} else if (interaction.commandName === "faq"){
 	var channel='<#'+randoInfoId+'>';
 	embed.setTitle('To get started with the randomizer, please read our FAQ and startup guide.')
 	faqCounter++;
 	embed.setDescription('You can find them in '+channel+".\n\n Number of times called: " +faqCounter);
 	embed.setColor(0xffad21);
-	message.channel.send(embed);
+	interaction.reply({embeds:[embed]});
 }
 })
 client.login(BOT_TOKEN);
