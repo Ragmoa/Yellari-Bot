@@ -1,15 +1,59 @@
-const Discord = require('discord.js');
-const client = new Discord.Client();
+const { Client, Intents } = require('discord.js');
+const interactions = require ("discord-slash-commands-client")
+// console.log(Intents.FLAGS.GUILDS);
+const client = new Client({intents: [Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.DIRECT_MESSAGES]});
 const {google} = require('googleapis');
 const calendar =google.calendar('v3');
 const API_KEY=process.env.GAPI_TOKEN;
+const BOT_TOKEN=process.env.BOT_TOKEN;
+
 const unitariumBaseLink='http://time.unitarium.com/utc/';
 const racingAnnnouncementsId=process.env.RACING_ANNOUNCEMENTS_CHANNEL_ID;
 const randoInfoId=process.env.RANDO_INFO_CHANNEL_ID;
 var faqCounter=0+process.env.FAQ_COUNTER;
+const commandList=[
+	{
+		name: "weekly",
+		description: "Displays information about the next weekly race"
+	},
+	{
+		name: "utc",
+		description: "Displays UTC submitted time in every user's timezone",
+		options: [
+			{
+				name: "time",
+				description: "UTC hour and minutes in the HH:MM format",
+				required: true,
+				type: 3
+			},
+			{
+				name: "ampm",
+				description: "am or pm ?",
+				required: false,
+				type: 3,
+				choices:[
+					{
+						name: "am",
+						value: "am",
+					},
+					{
+						name: "pm",
+						value: "pm"
+					}
+				]
+			}
+		]
+	},
+	{
+		name: "faq",
+		description: "Displays a link to the FAQ and general informations"
+	}
+]
 
+client.interactions = new interactions.Client(BOT_TOKEN,"687369258942201925");
 
 client.once('ready', () => {
+	registerCommands();
 	client.user.setActivity('!faq',{type:'LISTENING'});
 	console.log('[INIT] Ready!!');
 });
@@ -161,6 +205,7 @@ client.on('message', message => {
 	message.channel.send(embed);
 }
 })
+client.login(BOT_TOKEN);
 
 function dhm(t){
     var cd = 24 * 60 * 60 * 1000,
@@ -187,4 +232,15 @@ function dhm(t){
 function pad (n){
 	return n < 10 ? '0' + n : n;
 }
-client.login(process.env.BOT_TOKEN);
+
+function registerCommands(){
+	var success=0;
+	commandList.forEach((command,index) => {
+		client.interactions.createCommand(command,GUILD_ID).then(console.log()).catch((err) => {
+			success--;
+		});
+		success++;
+	})
+	console.log("Sucessfully registerd " + success + " commands out of " + commandList.length);
+	return ;
+}
