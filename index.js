@@ -6,6 +6,7 @@ const {google} = require('googleapis');
 const calendar =google.calendar('v3');
 const API_KEY=process.env.GAPI_TOKEN;
 const BOT_TOKEN=process.env.BOT_TOKEN;
+const BOT_ID=process.env.BOT_ID;
 
 const unitariumBaseLink='http://time.unitarium.com/utc/';
 const racingAnnnouncementsId=process.env.RACING_ANNOUNCEMENTS_CHANNEL_ID;
@@ -50,7 +51,7 @@ const commandList=[
 	}
 ]
 
-client.interactions = new interactions.Client(BOT_TOKEN,"687369258942201925");
+client.interactions = new interactions.Client(BOT_TOKEN,BOT_ID);
 
 client.once('ready', () => {
 	registerCommands();
@@ -236,7 +237,7 @@ function pad (n){
 function registerCommands(){
 	var success=0;
 	commandList.forEach((command,index) => {
-		client.interactions.createCommand(command,GUILD_ID).then(console.log()).catch((err) => {
+		client.interactions.createCommand(command).then(console.log()).catch((err) => {
 			success--;
 		});
 		success++;
