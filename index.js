@@ -1,6 +1,5 @@
 const { Client, Intents, MessageEmbed } = require('discord.js');
 const interactions = require ("discord-slash-commands-client")
-// console.log(Intents.FLAGS.GUILDS);
 const client = new Client({intents: [Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.DIRECT_MESSAGES]});
 const {google} = require('googleapis');
 const calendar =google.calendar('v3');
@@ -11,12 +10,14 @@ const randoInfoId=process.env.RANDO_INFO_CHANNEL_ID;
 
 const unitariumBaseLink='http://time.unitarium.com/utc/';
 const racingAnnnouncementsId=process.env.RACING_ANNOUNCEMENTS_CHANNEL_ID;
-
-var faqCounter=0+process.env.FAQ_COUNTER;
 const commandList=[
 	{
 		name: "weekly",
 		description: "Displays information about the next weekly race"
+	},
+  {
+		name: "casual",
+		description: "Displays information about the next casual weekly race"
 	},
 	{
 		name: "utc",
@@ -95,7 +96,7 @@ client.on('interactionCreate', interaction => {
 					embed.setDescription('Weekly started ' +neGap.hours+' hours, ' +neGap.minutes+ ' minutes ago\n\n Head to '+ neTwitchChannel+' to watch it!')
 					embed.setURL(neTwitchChannel);
 					embed.setColor(0xffad21);
-					message.channel.send(embed);
+				 interaction.reply({embeds:[embed]});
 				} else {
 			 	embed.setTitle('Next weekly is in '+ neGap.days+' days, '+neGap.hours+' hours, and ' +neGap.minutes+ ' minutes')
         let timeStamp = neStartDate.getTime().toString().substring(0,10);
@@ -200,11 +201,29 @@ client.on('interactionCreate', interaction => {
 } else if (interaction.commandName === "faq"){
 	var channel='<#'+randoInfoId+'>';
 	embed.setTitle('To get started with the randomizer, please read our FAQ and startup guide.')
-	faqCounter++;
-	embed.setDescription('You can find them in '+channel+".\n\n Number of times called: " +faqCounter);
+	embed.setDescription('You can find them in '+channel+".");
 	embed.setColor(0xffad21);
 	interaction.reply({embeds:[embed]});
-}
+} else if (interaction.commandName==='casual'){
+    let nextCasual=new Date();
+    if (nextCasual.getUTCDay()!=3 || (nextCasual.getUTCDay()==3 && (nextCasual.getUTCHours()<=16 || nextCasual.getUTCHours() > 17 ) )) {
+      let daysGap=(10-nextCasual.getUTCDay())%7;
+      nextCasual.setDate(nextCasual.getDate()+daysGap);
+      nextCasual.setUTCHours(17);
+      nextCasual.setUTCMinutes(0);
+      nextCasual.setUTCSeconds(0);
+      let now=new Date();
+      let ncGap=dhm(nextCasual-now);
+      let timeStamp = nextCasual.getTime().toString().substring(0,10);
+      embed.setTitle('Next casual weekly is in '+ ncGap.days+' days, '+ncGap.hours+' hours, and ' +ncGap.minutes+ ' minutes');
+      embed.setDescription("The race should start on the <t:"+timeStamp+":D>, around <t:"+timeStamp+":t>\nRace room should open 1 hour before.");
+    } else {
+        embed.setTitle('The casual weekly should start soon!');
+        embed.setDescription("Check <#"+RACING_ANNOUNCEMENTS_CHANNEL_ID+"> to find the race room!");
+    }
+    embed.setColor(0xffad21);
+    interaction.reply({embeds:[embed]});
+  }
 })
 client.login(BOT_TOKEN);
 
