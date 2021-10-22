@@ -1,24 +1,70 @@
-const Discord = require('discord.js');
-const client = new Discord.Client();
+const { Client, Intents, MessageEmbed } = require('discord.js');
+const interactions = require ("discord-slash-commands-client")
+const client = new Client({intents: [Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.DIRECT_MESSAGES]});
 const {google} = require('googleapis');
 const calendar =google.calendar('v3');
 const API_KEY=process.env.GAPI_TOKEN;
+const BOT_TOKEN=process.env.BOT_TOKEN;
+const BOT_ID=process.env.BOT_ID;
+const randoInfoId=process.env.RANDO_INFO_CHANNEL_ID;
+
 const unitariumBaseLink='http://time.unitarium.com/utc/';
 const racingAnnnouncementsId=process.env.RACING_ANNOUNCEMENTS_CHANNEL_ID;
-const randoInfoId=process.env.RANDO_INFO_CHANNEL_ID;
-var faqCounter=0+process.env.FAQ_COUNTER;
+const commandList=[
+	{
+		name: "weekly",
+		description: "Displays information about the next weekly race"
+	},
+  {
+		name: "casual",
+		description: "Displays information about the next casual weekly race"
+	},
+	{
+		name: "utc",
+		description: "Displays UTC submitted time in every user's timezone",
+		options: [
+			{
+				name: "time",
+				description: "UTC hour and minutes in the HH:MM format",
+				required: true,
+				type: 3
+			},
+			{
+				name: "ampm",
+				description: "am or pm ?",
+				required: false,
+				type: 3,
+				choices:[
+					{
+						name: "am",
+						value: "am",
+					},
+					{
+						name: "pm",
+						value: "pm"
+					}
+				]
+			}
+		]
+	},
+	{
+		name: "faq",
+		description: "Displays a link to the FAQ and general informations"
+	}
+]
 
+client.interactions = new interactions.Client(BOT_TOKEN,BOT_ID);
 
 client.once('ready', () => {
+	registerCommands();
 	client.user.setActivity('!faq',{type:'LISTENING'});
 	console.log('[INIT] Ready!!');
 });
 
-client.on('message', message => {
-
-	const embed = new Discord.MessageEmbed()
-  // Calling !weekly
-  if (message.content.toLowerCase()==='!weekly'){
+client.on('interactionCreate', interaction => {
+	const embed = new MessageEmbed()
+  // Calling /weekly
+  if (interaction.commandName==='weekly'){
 		var answer='';
 		let calendarPromise=calendar.events.list({
 			"auth" : API_KEY,
@@ -50,9 +96,10 @@ client.on('message', message => {
 					embed.setDescription('Weekly started ' +neGap.hours+' hours, ' +neGap.minutes+ ' minutes ago\n\n Head to '+ neTwitchChannel+' to watch it!')
 					embed.setURL(neTwitchChannel);
 					embed.setColor(0xffad21);
-					message.channel.send(embed);
+				 interaction.reply({embeds:[embed]});
 				} else {
 			 	embed.setTitle('Next weekly is in '+ neGap.days+' days, '+neGap.hours+' hours, and ' +neGap.minutes+ ' minutes')
+        let timeStamp = neStartDate.getTime().toString().substring(0,10);
 				if (neTitle.includes("Variety")){
 					neDesc2=neDescription.replace("<br>","\n\r");
 					if (neDesc2.match(/(This\ month's.*:.*)/) && neDesc2.match(/(This\ month's.*:.*)/).length>0){
@@ -63,39 +110,38 @@ client.on('message', message => {
 						embed.setDescription("Next Weekly is the Variety Race! \n"+
 						"Check "+ channel +" for more info about the settings."+
 						" \n\nRestream will be on: "+neTwitchChannel+
-						"\n\nRace starts on the "+pad(neStartDate.getUTCDate())+'/'+pad(neStartDate.getUTCMonth()+1)+', at '+ pad(neStartDate.getUTCHours()) + ':' +pad(neStartDate.getUTCMinutes()) +' UTC');
+						"\n\nRace starts on the <t:"+timeStamp+':D>, at <t:'+timeStamp+':t>');
 					}
 				} else {
-					embed.setDescription("Restream will be on: "+neTwitchChannel+"\n\nRace starts on the "+pad(neStartDate.getUTCDate())+'/'+pad(neStartDate.getUTCMonth()+1)+', at '+ pad(neStartDate.getUTCHours()) + ':' +pad(neStartDate.getUTCMinutes()) +' UTC');
+					embed.setDescription("Restream will be on: "+neTwitchChannel+"\n\nRace starts on the <t:"+timeStamp+':D>, at <t:'+timeStamp+':t>');
 				}
-				embed.setURL(unitariumBaseLink+pad(neStartDate.getUTCHours())+pad(neStartDate.getUTCMinutes()));
 				// "YELLARI" YELLOW 4 THE WIN
 				embed.setColor(0xffad21);
-				message.channel.send(embed);
+			  interaction.reply({embeds:[embed]});
 			}
 			} else {
 				embed.setTitle('Didn\'t find any weekly!')
 				.setColor(0xff0000)
-				  message.channel.send(embed);
+				  interaction.reply({embeds:[embed]});
 				}
 			}
 		});
-  } else if (message.content.startsWith('!utc')) {
+  } else if (interaction.commandName === "utc") {
 			let hours24;
-			let hourstab=message.content.split(' ');
+			let options=Object.fromEntries(interaction.options);
 			let suffix='';
-			if (hourstab.length==3){
-				suffix=hourstab[2];
+			if ('ampm' in options){
+				suffix=options['ampm']['value'];
 			}
-			if (hourstab.length >= 2){
-					time=hourstab[1];
+			if ('time'in options){
+					time=options['time']['value'];
 					if (time.includes(':')){
 						  let hourstab2=time.split(':');
 							minutes=parseInt(hourstab2[1]);
 								hours=hourstab2[0];
 					  } else {
 							minutes=0;
-						  hours=hourstab[1];
+						  hours=time;
 					}
 			if (suffix=='pm'){
 					if (hours>0 && hours <=12 && minutes >=0 && minutes <=59){
@@ -130,13 +176,13 @@ client.on('message', message => {
 				embed.setTitle(title)
 				embed.setColor(0xffad21);
 				embed.setURL(unitariumBaseLink+pad(utcDate.getUTCHours()));
-				message.channel.send(embed);
+				interaction.reply({embeds:[embed]});
 
 		} else {
 			embed.setTitle('I didn\'t understand the time you gave me.')
 			embed.setDescription("Please use one of these formats:\n    - XX(:XX) am\n    - XX(:XX) pm\n    - XX(:XX)    (24hr format)");
 			embed.setColor(0xff0000);
-			message.channel.send(embed);
+			interaction.reply({embeds:[embed]});
 		}
 	} else {
 		let now=new Date();
@@ -150,17 +196,36 @@ client.on('message', message => {
 		var strTime = hours + ':' + pad(minutes) + ' ' + ampm;
 		embed.setDescription(now.getUTCHours()+":"+ pad(now.getUTCMinutes())+" / "+strTime);
 		embed.setColor(0xffad21);
-		message.channel.send(embed);
+		interaction.reply({embeds:[embed]});
 	}
-} else if (message.content.startsWith('!faq')){
+} else if (interaction.commandName === "faq"){
 	var channel='<#'+randoInfoId+'>';
 	embed.setTitle('To get started with the randomizer, please read our FAQ and startup guide.')
-	faqCounter++;
-	embed.setDescription('You can find them in '+channel+".\n\n Number of times called: " +faqCounter);
+	embed.setDescription('You can find them in '+channel+".");
 	embed.setColor(0xffad21);
-	message.channel.send(embed);
-}
+	interaction.reply({embeds:[embed]});
+} else if (interaction.commandName==='casual'){
+    let nextCasual=new Date();
+    if (nextCasual.getUTCDay()!=3 || (nextCasual.getUTCDay()==3 && (nextCasual.getUTCHours()<=16 || nextCasual.getUTCHours() > 17 ) )) {
+      let daysGap=(10-nextCasual.getUTCDay())%7;
+      nextCasual.setDate(nextCasual.getDate()+daysGap);
+      nextCasual.setUTCHours(17);
+      nextCasual.setUTCMinutes(0);
+      nextCasual.setUTCSeconds(0);
+      let now=new Date();
+      let ncGap=dhm(nextCasual-now);
+      let timeStamp = nextCasual.getTime().toString().substring(0,10);
+      embed.setTitle('Next casual weekly is in '+ ncGap.days+' days, '+ncGap.hours+' hours, and ' +ncGap.minutes+ ' minutes');
+      embed.setDescription("The race should start on the <t:"+timeStamp+":D>, around <t:"+timeStamp+":t>\nRace room should open 1 hour before.");
+    } else {
+        embed.setTitle('The casual weekly should start soon!');
+        embed.setDescription("Check <#"+RACING_ANNOUNCEMENTS_CHANNEL_ID+"> to find the race room!");
+    }
+    embed.setColor(0xffad21);
+    interaction.reply({embeds:[embed]});
+  }
 })
+client.login(BOT_TOKEN);
 
 function dhm(t){
     var cd = 24 * 60 * 60 * 1000,
@@ -187,4 +252,15 @@ function dhm(t){
 function pad (n){
 	return n < 10 ? '0' + n : n;
 }
-client.login(process.env.BOT_TOKEN);
+
+function registerCommands(){
+	var success=0;
+	commandList.forEach((command,index) => {
+		client.interactions.createCommand(command).then(console.log()).catch((err) => {
+			success--;
+		});
+		success++;
+	})
+	console.log("Sucessfully registerd " + success + " commands out of " + commandList.length);
+	return ;
+}
