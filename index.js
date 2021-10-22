@@ -98,6 +98,7 @@ client.on('interactionCreate', interaction => {
 					message.channel.send(embed);
 				} else {
 			 	embed.setTitle('Next weekly is in '+ neGap.days+' days, '+neGap.hours+' hours, and ' +neGap.minutes+ ' minutes')
+        let timeStamp = neStartDate.getTime().toString().substring(0,10);
 				if (neTitle.includes("Variety")){
 					neDesc2=neDescription.replace("<br>","\n\r");
 					if (neDesc2.match(/(This\ month's.*:.*)/) && neDesc2.match(/(This\ month's.*:.*)/).length>0){
@@ -108,12 +109,11 @@ client.on('interactionCreate', interaction => {
 						embed.setDescription("Next Weekly is the Variety Race! \n"+
 						"Check "+ channel +" for more info about the settings."+
 						" \n\nRestream will be on: "+neTwitchChannel+
-						"\n\nRace starts on the "+pad(neStartDate.getUTCDate())+'/'+pad(neStartDate.getUTCMonth()+1)+', at '+ pad(neStartDate.getUTCHours()) + ':' +pad(neStartDate.getUTCMinutes()) +' UTC');
+						"\n\nRace starts on the <t:"+timeStamp+':D>, at <t:'+timeStamp+':t>');
 					}
 				} else {
-					embed.setDescription("Restream will be on: "+neTwitchChannel+"\n\nRace starts on the "+pad(neStartDate.getUTCDate())+'/'+pad(neStartDate.getUTCMonth()+1)+', at '+ pad(neStartDate.getUTCHours()) + ':' +pad(neStartDate.getUTCMinutes()) +' UTC');
+					embed.setDescription("Restream will be on: "+neTwitchChannel+"\n\nRace starts on the <t:"+timeStamp+':D>, at <t:'+timeStamp+':t>');
 				}
-				embed.setURL(unitariumBaseLink+pad(neStartDate.getUTCHours())+pad(neStartDate.getUTCMinutes()));
 				// "YELLARI" YELLOW 4 THE WIN
 				embed.setColor(0xffad21);
 			  interaction.reply({embeds:[embed]});
@@ -127,20 +127,20 @@ client.on('interactionCreate', interaction => {
 		});
   } else if (interaction.commandName === "utc") {
 			let hours24;
-			let hourstab=interaction.content.split(' ');
+			let options=Object.fromEntries(interaction.options);
 			let suffix='';
-			if (hourstab.length==3){
-				suffix=hourstab[2];
+			if ('ampm' in options){
+				suffix=options['ampm']['value'];
 			}
-			if (hourstab.length >= 2){
-					time=hourstab[1];
+			if ('time'in options){
+					time=options['time']['value'];
 					if (time.includes(':')){
 						  let hourstab2=time.split(':');
 							minutes=hourstab2[1];
 								hours=hourstab2[0];
 					  } else {
 							minutes=0;
-						  hours=hourstab[1];
+						  hours=time;
 					}
 			if (suffix=='pm'){
 					if (hours>0 && hours <=12){
