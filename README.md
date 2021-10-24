@@ -3,7 +3,7 @@ A discord Bot for Minish Cap Randomizer Races
 
 ## Invite Link
 
-Use this link to add Yellari to your server: https://discordapp.com/api/oauth2/authorize?client_id=686271218999230540&permissions=19456&scope=bot
+Use this link to add Yellari to your server: https://discord.com/api/oauth2/authorize?client_id=686271218999230540&permissions=2147503104&scope=bot
 
 ## Install
 
