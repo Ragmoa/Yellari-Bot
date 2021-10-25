@@ -26,7 +26,7 @@ const commandList=[
 			{
 				name: "time",
 				description: "UTC hour and minutes in the HH:MM format",
-				required: true,
+				required: false,
 				type: 3
 			},
 			{
@@ -57,7 +57,7 @@ client.interactions = new interactions.Client(BOT_TOKEN,BOT_ID);
 
 client.once('ready', () => {
 	registerCommands();
-	client.user.setActivity('!faq',{type:'LISTENING'});
+	client.user.setActivity('type /',{type:'LISTENING'});
 	console.log('[INIT] Ready!!');
 });
 
