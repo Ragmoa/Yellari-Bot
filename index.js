@@ -206,10 +206,9 @@ client.on('interactionCreate', interaction => {
 	interaction.reply({embeds:[embed]});
 } else if (interaction.commandName==='casual'){
     let nextCasual=new Date();
-    if (nextCasual.getUTCDay()!=3 || (nextCasual.getUTCDay()==3 && (nextCasual.getUTCHours()<=16 || nextCasual.getUTCHours() > 17 ) )) {
       let daysGap=(10-nextCasual.getUTCDay())%7;
       nextCasual.setDate(nextCasual.getDate()+daysGap);
-      nextCasual.setUTCHours(17);
+      nextCasual.setUTCHours(18);
       nextCasual.setUTCMinutes(0);
       nextCasual.setUTCSeconds(0);
       let now=new Date();
@@ -217,10 +216,6 @@ client.on('interactionCreate', interaction => {
       let timeStamp = nextCasual.getTime().toString().substring(0,10);
       embed.setTitle('Next casual weekly is in '+ ncGap.days+' days, '+ncGap.hours+' hours, and ' +ncGap.minutes+ ' minutes');
       embed.setDescription("The race should start on the <t:"+timeStamp+":D>, around <t:"+timeStamp+":t>\nRace room should open 1 hour before.");
-    } else {
-        embed.setTitle('The casual weekly should start soon!');
-        embed.setDescription("Check <#"+RACING_ANNOUNCEMENTS_CHANNEL_ID+"> to find the race room!");
-    }
     embed.setColor(0xffad21);
     interaction.reply({embeds:[embed]});
   }
