@@ -52,8 +52,6 @@ const commandList = [
     }
 ];
 
-client.interactions = new interactions.Client(BOT_TOKEN, BOT_ID);
-
 client.once('ready', () => {
     registerCommands();
     client.user.setActivity('type /', { type: 'LISTENING' });
