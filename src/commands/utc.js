@@ -4,15 +4,15 @@ const unitariumBaseLink = 'http://time.unitarium.com/utc/';
 
 export default function utc(interaction, embed) {
     let hours24;
-    let options = Object.fromEntries(interaction.options);
     let suffix = '';
+    let time = '';
 
-    if ('ampm' in options) {
-        suffix = options['ampm']['value'];
+    if (interaction.options.get('ampm')) {
+        suffix = interaction.options.get('ampm').value;
     }
 
-    if ('time' in options) {
-        time = options['time']['value'];
+    if (interaction.options.get('time')) {
+        time = interaction.options.get('time').value;
 
         if (time.includes(':')) {
             let hourstab2 = time.split(':');
@@ -32,7 +32,7 @@ export default function utc(interaction, embed) {
                 hours24 = parseInt(hours, 10);
             }
         } else {
-            h24 = parseInt(hours, 10);
+            let h24 = parseInt(hours, 10);
 
             if (h24 && h24 < 24 && minutes >= 0 && minutes <= 59) {
                 hours24 = h24;
@@ -52,6 +52,8 @@ export default function utc(interaction, embed) {
             }
 
             let gap = dhm(utcDate - now);
+
+            let title = '';
 
             if (suffix == 'am' || suffix == "pm") {
                 title = pad(parseInt(hours)) + ':' + pad(minutes) + ' ' + suffix;
