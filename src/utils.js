@@ -68,11 +68,11 @@ const commandList = [
     }
 ];
 
-export function registerCommands() {
+export function registerCommands(client) {
     var success = 0;
 
     commandList.forEach((command, index) => {
-        client.interactions.createCommand(command).then(console.log()).catch((err) => {
+        client.application.commands.create(command).then(console.log()).catch((err) => {
             success--;
         });
         success++;

@@ -1,4 +1,4 @@
-import { dhm, pad } from "../utils";
+import { dhm, pad } from "../utils.js";
 
 const unitariumBaseLink = 'http://time.unitarium.com/utc/';
 

@@ -1,4 +1,4 @@
-import { dhm } from "../utils";
+import { dhm } from "../utils.js";
 
 export default function weekly(interaction, embed, calendar) {
     let calendarPromise = calendar.events.list({

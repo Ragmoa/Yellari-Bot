@@ -1,4 +1,4 @@
-import { dhm } from "../utils";
+import { dhm } from "../utils.js";
 
 export default function casual(interaction, embed) {
     let nextCasual = new Date();

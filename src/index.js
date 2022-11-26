@@ -1,25 +1,26 @@
-require('dotenv').config();
+import dotenv from 'dotenv';
+dotenv.config();
 
-const { Client, IntentsBitField, MessageEmbed } = require('discord.js');
+import { Client, IntentsBitField, EmbedBuilder } from 'discord.js';
 const client = new Client({ intents: [IntentsBitField.Flags.GuildMessages, IntentsBitField.Flags.DirectMessages] });
 
-const { google } = require('googleapis');
+import { google } from 'googleapis';
 const calendar = google.calendar('v3');
 
-const { casual } = require('./commands/casual');
-const { faq } = require('./commands/faq');
-const { utc } = require('./commands/utc');
-const { weekly } = require('./commands/weekly');
-const { registerCommands } = require('./utils');
+import casual from './commands/casual.js';
+import faq from './commands/faq.js';
+import utc from './commands/utc.js';
+import weekly from './commands/weekly.js';
+import { registerCommands } from './utils.js';
 
 client.once('ready', () => {
-    registerCommands();
+    registerCommands(client);
     client.user.setActivity('type /', { type: 'LISTENING' });
     console.log('[INIT] Ready!!');
 });
 
 client.on('interactionCreate', interaction => {
-    const embed = new MessageEmbed();
+    const embed = new EmbedBuilder();
 
     switch (interaction.commandName) {
         case 'weekly':
