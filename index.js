@@ -1,14 +1,17 @@
 const { Client, Intents, MessageEmbed } = require('discord.js');
-const interactions = require("discord-slash-commands-client");
 const client = new Client({ intents: [Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.DIRECT_MESSAGES] });
+
 const { google } = require('googleapis');
 const calendar = google.calendar('v3');
+
+require('dotenv').config();
 const API_KEY = process.env.GAPI_TOKEN;
 const BOT_TOKEN = process.env.BOT_TOKEN;
-const BOT_ID = process.env.BOT_ID;
 const randoInfoId = process.env.RANDO_INFO_CHANNEL_ID;
-const unitariumBaseLink = 'http://time.unitarium.com/utc/';
 const racingAnnnouncementsId = process.env.RACING_ANNOUNCEMENTS_CHANNEL_ID;
+
+const unitariumBaseLink = 'http://time.unitarium.com/utc/';
+
 const commandList = [
     {
         name: "weekly",
