@@ -24,14 +24,59 @@ export function pad(n) {
     return n < 10 ? '0' + n : n;
 }
 
+
+const commandList = [
+    {
+        name: "weekly",
+        description: "Displays information about the next weekly race"
+    },
+    {
+        name: "casual",
+        description: "Displays information about the next casual weekly race"
+    },
+    {
+        name: "utc",
+        description: "Displays UTC submitted time in every user's timezone",
+        options: [
+            {
+                name: "time",
+                description: "UTC hour and minutes in the HH:MM format",
+                required: false,
+                type: 3
+            },
+            {
+                name: "ampm",
+                description: "am or pm ?",
+                required: false,
+                type: 3,
+                choices: [
+                    {
+                        name: "am",
+                        value: "am",
+                    },
+                    {
+                        name: "pm",
+                        value: "pm"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        name: "faq",
+        description: "Displays a link to the FAQ and general informations"
+    }
+];
+
 export function registerCommands() {
     var success = 0;
+
     commandList.forEach((command, index) => {
         client.interactions.createCommand(command).then(console.log()).catch((err) => {
             success--;
         });
         success++;
     });
+
     console.log("Sucessfully registerd " + success + " commands out of " + commandList.length);
-    return;
 }

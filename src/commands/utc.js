@@ -1,5 +1,7 @@
 import { dhm, pad } from "../utils";
 
+const unitariumBaseLink = 'http://time.unitarium.com/utc/';
+
 export default function utc(interaction, embed) {
     let hours24;
     let options = Object.fromEntries(interaction.options);

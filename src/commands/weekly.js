@@ -2,7 +2,7 @@ import { dhm } from "../utils";
 
 export default function weekly(interaction, embed, calendar) {
     let calendarPromise = calendar.events.list({
-        "auth": API_KEY,
+        "auth": process.env.GAPI_TOKEN,
         "calendarId": "zsrstaff@gmail.com",
         "maxResults": 1,
         "orderBy": "startTime",
@@ -50,7 +50,7 @@ export default function weekly(interaction, embed, calendar) {
                             neVarietySettings = neDesc2.match(/(This\ month's.*:.*)/)[0];
                             embed.setDescription("Next Weekly is the Variety Race!\n" + neVarietySettings + "\n\nRestream will be on: " + neTwitchChannel + "\n\nRace starts on the " + pad(neStartDate.getUTCDate()) + '/' + pad(neStartDate.getUTCMonth() + 1) + ', at ' + pad(neStartDate.getUTCHours()) + ':' + pad(neStartDate.getUTCMinutes()) + ' UTC');
                         } else {
-                            var channel = '<#' + racingAnnnouncementsId + '>';
+                            var channel = '<#' + process.env.RACING_ANNOUNCEMENTS_CHANNEL_ID + '>';
                             embed.setDescription("Next Weekly is the Variety Race! \n" +
                                 "Check " + channel + " for more info about the settings." +
                                 " \n\nRestream will be on: " + neTwitchChannel +

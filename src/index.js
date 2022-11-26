@@ -10,55 +10,6 @@ const { registerCommands } = require('./utils');
 const calendar = google.calendar('v3');
 
 require('dotenv').config();
-const API_KEY = process.env.GAPI_TOKEN;
-const BOT_TOKEN = process.env.BOT_TOKEN;
-const randoInfoId = process.env.RANDO_INFO_CHANNEL_ID;
-const racingAnnnouncementsId = process.env.RACING_ANNOUNCEMENTS_CHANNEL_ID;
-
-const unitariumBaseLink = 'http://time.unitarium.com/utc/';
-
-const commandList = [
-    {
-        name: "weekly",
-        description: "Displays information about the next weekly race"
-    },
-    {
-        name: "casual",
-        description: "Displays information about the next casual weekly race"
-    },
-    {
-        name: "utc",
-        description: "Displays UTC submitted time in every user's timezone",
-        options: [
-            {
-                name: "time",
-                description: "UTC hour and minutes in the HH:MM format",
-                required: false,
-                type: 3
-            },
-            {
-                name: "ampm",
-                description: "am or pm ?",
-                required: false,
-                type: 3,
-                choices: [
-                    {
-                        name: "am",
-                        value: "am",
-                    },
-                    {
-                        name: "pm",
-                        value: "pm"
-                    }
-                ]
-            }
-        ]
-    },
-    {
-        name: "faq",
-        description: "Displays a link to the FAQ and general informations"
-    }
-];
 
 client.once('ready', () => {
     registerCommands();
@@ -88,4 +39,4 @@ client.on('interactionCreate', interaction => {
     }
 });
 
-client.login(BOT_TOKEN);
+client.login(process.env.BOT_TOKEN);
