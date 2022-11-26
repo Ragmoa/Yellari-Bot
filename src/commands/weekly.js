@@ -1,3 +1,5 @@
+import { dhm } from "../utils";
+
 export default function weekly(interaction, embed, calendar) {
     let calendarPromise = calendar.events.list({
         "auth": API_KEY,
@@ -11,10 +13,13 @@ export default function weekly(interaction, embed, calendar) {
 
     calendarPromise.then(function (result) {
         if (result.status != 200) {
+
             console.log('Error ' + result.statusText);
+
             embed.setTitle('Unable to get calendar events!')
                 .setColor(0xff0000);
             message.channel.send(embed);
+
         } else {
             if (result.data.items.length) {
                 let nextEvent = result.data.items[0];
@@ -27,16 +32,20 @@ export default function weekly(interaction, embed, calendar) {
 
                 if (now > neStartDate) {
                     let neGap = dhm(now - neStartDate);
+
                     embed.setTitle('Weekly is currently underway!');
                     embed.setDescription('Weekly started ' + neGap.hours + ' hours, ' + neGap.minutes + ' minutes ago\n\n Head to ' + neTwitchChannel + ' to watch it!');
                     embed.setURL(neTwitchChannel);
                     embed.setColor(0xffad21);
+
                     interaction.reply({ embeds: [embed] });
                 } else {
                     embed.setTitle('Next weekly is in ' + neGap.days + ' days, ' + neGap.hours + ' hours, and ' + neGap.minutes + ' minutes');
                     let timeStamp = neStartDate.getTime().toString().substring(0, 10);
+
                     if (neTitle.includes("Variety")) {
                         neDesc2 = neDescription.replace("<br>", "\n\r");
+
                         if (neDesc2.match(/(This\ month's.*:.*)/) && neDesc2.match(/(This\ month's.*:.*)/).length > 0) {
                             neVarietySettings = neDesc2.match(/(This\ month's.*:.*)/)[0];
                             embed.setDescription("Next Weekly is the Variety Race!\n" + neVarietySettings + "\n\nRestream will be on: " + neTwitchChannel + "\n\nRace starts on the " + pad(neStartDate.getUTCDate()) + '/' + pad(neStartDate.getUTCMonth() + 1) + ', at ' + pad(neStartDate.getUTCHours()) + ':' + pad(neStartDate.getUTCMinutes()) + ' UTC');

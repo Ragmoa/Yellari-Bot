@@ -1,3 +1,5 @@
+import { dhm } from "../utils";
+
 export default function casual(interaction, embed) {
     let nextCasual = new Date();
     let daysGap = (10 - nextCasual.getUTCDay()) % 7;

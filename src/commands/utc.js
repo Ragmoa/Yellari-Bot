@@ -1,3 +1,5 @@
+import { dhm, pad } from "../utils";
+
 export default function utc(interaction, embed) {
     let hours24;
     let options = Object.fromEntries(interaction.options);
@@ -38,42 +40,54 @@ export default function utc(interaction, embed) {
         if (hours24) {
             let now = new Date();
             let utcDate = new Date();
+
             utcDate.setUTCHours(hours24);
             utcDate.setUTCMinutes(minutes);
             utcDate.setUTCSeconds(0);
+
             if (utcDate < now) {
                 utcDate.setDate(utcDate.getDate() + 1);
             }
+
             let gap = dhm(utcDate - now);
+
             if (suffix == 'am' || suffix == "pm") {
                 title = pad(parseInt(hours)) + ':' + pad(minutes) + ' ' + suffix;
             } else {
                 title = pad(parseInt(hours)) + ':' + pad(minutes);
             }
+
             title += ' UTC is in: ' + gap.hours + ' hours and ' + gap.minutes + ' minutes';
+
             embed.setTitle(title);
             embed.setColor(0xffad21);
             embed.setURL(unitariumBaseLink + pad(utcDate.getUTCHours()));
+
             interaction.reply({ embeds: [embed] });
 
         } else {
             embed.setTitle('I didn\'t understand the time you gave me.');
             embed.setDescription("Please use one of these formats:\n    - XX(:XX) am\n    - XX(:XX) pm\n    - XX(:XX)    (24hr format)");
             embed.setColor(0xff0000);
+
             interaction.reply({ embeds: [embed] });
         }
     } else {
         let now = new Date();
         let title = "It's " + now.getUTCHours() + ":" + pad(now.getUTCMinutes()) + " in UTC.";
+
         embed.setTitle(title);
+
         var hours = now.getUTCHours();
         var minutes = now.getUTCMinutes();
         var ampm = hours >= 12 ? 'pm' : 'am';
         hours = hours % 12;
         hours = hours ? hours : 12; // the hour '0' should be '12'
         var strTime = hours + ':' + pad(minutes) + ' ' + ampm;
+
         embed.setDescription(now.getUTCHours() + ":" + pad(now.getUTCMinutes()) + " / " + strTime);
         embed.setColor(0xffad21);
+
         interaction.reply({ embeds: [embed] });
     }
 }

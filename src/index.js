@@ -6,6 +6,7 @@ const { default: casual } = require('./commands/casual');
 const { default: faq } = require('./commands/faq');
 const { default: utc } = require('./commands/utc');
 const { default: weekly } = require('./commands/weekly');
+const { registerCommands } = require('./utils');
 const calendar = google.calendar('v3');
 
 require('dotenv').config();
@@ -67,7 +68,7 @@ client.once('ready', () => {
 
 client.on('interactionCreate', interaction => {
     const embed = new MessageEmbed();
-    // Calling /weekly
+
     if (interaction.commandName === 'weekly') {
         weekly(interaction, embed, calendar);
     } else if (interaction.commandName === "utc") {
