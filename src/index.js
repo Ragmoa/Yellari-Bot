@@ -1,15 +1,16 @@
+require('dotenv').config();
+
 const { Client, Intents, MessageEmbed } = require('discord.js');
 const client = new Client({ intents: [Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.DIRECT_MESSAGES] });
 
 const { google } = require('googleapis');
-const { default: casual } = require('./commands/casual');
-const { default: faq } = require('./commands/faq');
-const { default: utc } = require('./commands/utc');
-const { default: weekly } = require('./commands/weekly');
-const { registerCommands } = require('./utils');
 const calendar = google.calendar('v3');
 
-require('dotenv').config();
+const { casual } = require('./commands/casual');
+const { faq } = require('./commands/faq');
+const { utc } = require('./commands/utc');
+const { weekly } = require('./commands/weekly');
+const { registerCommands } = require('./utils');
 
 client.once('ready', () => {
     registerCommands();
