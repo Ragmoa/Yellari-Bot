@@ -1,0 +1,11 @@
+version: "3.9"
+
+services:
+  yellari:
+    build: .
+    container_name: yellari-bot
+    environment:
+      GAPI_TOKEN: ""
+      BOT_TOKEN: ""
+      RANDO_INFO_CHANNEL_ID: ""
+      RACING_ANNOUNCEMENTS_CHANNEL_ID: ""
