@@ -78,5 +78,5 @@ export function registerCommands() {
         success++;
     });
 
-    console.log("Sucessfully registerd " + success + " commands out of " + commandList.length);
+    console.log(`Sucessfully registerd ${success} commands out of ${commandList.length}`);
 }
