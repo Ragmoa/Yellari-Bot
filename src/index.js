@@ -1,7 +1,7 @@
 require('dotenv').config();
 
-const { Client, Intents, MessageEmbed } = require('discord.js');
-const client = new Client({ intents: [Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.DIRECT_MESSAGES] });
+const { Client, IntentsBitField, MessageEmbed } = require('discord.js');
+const client = new Client({ intents: [IntentsBitField.Flags.GuildMessages, IntentsBitField.Flags.DirectMessages] });
 
 const { google } = require('googleapis');
 const calendar = google.calendar('v3');
