@@ -69,14 +69,22 @@ client.once('ready', () => {
 client.on('interactionCreate', interaction => {
     const embed = new MessageEmbed();
 
-    if (interaction.commandName === 'weekly') {
-        weekly(interaction, embed, calendar);
-    } else if (interaction.commandName === "utc") {
-        utc(interaction, embed);
-    } else if (interaction.commandName === "faq") {
-        faq(interaction, embed);
-    } else if (interaction.commandName === 'casual') {
-        casual(interaction, embed);
+    switch (interaction.commandName) {
+        case 'weekly':
+            weekly(interaction, embed, calendar);
+            break;
+
+        case 'utc':
+            utc(interaction, embed);
+            break;
+
+        case 'faq':
+            faq(interaction, embed);
+            break;
+
+        case 'casual':
+            casual(interaction, embed);
+            break;
     }
 });
 
