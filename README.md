@@ -7,7 +7,7 @@ Use this link to add Yellari to your server: https://discord.com/api/oauth2/auth
 
 ## Install
 
-You need an updated version of Node.js (>=12.0.0)
+You need an updated version of Node.js (>=16.9.0)
 
 - run ```npm install```
 
