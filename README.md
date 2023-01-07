@@ -11,7 +11,12 @@ You need an updated version of Node.js (>=12.0.0)
 
 - run ```npm install```
 
-- replace the keys in index.js with a Google API Key, and your Discord Bot Api Key. **DO NOT COMMIT/SHOW ANY OF THESE**
+- add a .env file which will store the app parameters:
+  - GAPI_TOKEN = GOOGLE API CALENDAR TOKEN
+  - BOT_TOKEN = DISCORD BOT TOKEN
+  - BOT_ID = DISCORD APP ID
+  - RANDO_INFO_ID = RANDO INFO CHANNEL ID
+  - RACING_ANNOUNCEMENTS_CHANNEL_ID = RACING ANNOUCEMENTS CHANNEL ID
 
 - run the Bot with ```node .``` in the main folder.
 
