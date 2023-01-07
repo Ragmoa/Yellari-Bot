@@ -2,15 +2,16 @@
   "name": "yellari-bot",
   "version": "1.0.0",
   "description": "A Discord bot for the minish cap randomizer races",
-  "main": "index.js",
+  "main": "src/index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Rylux",
   "license": "GNU General Public License v3.0",
   "dependencies": {
-    "discord-slash-commands-client": "^1.2.1",
-    "discord.js": "github:MatteZ02/discord.js",
+    "discord.js": "^14.0",
+    "dotenv": "^16.0.3",
     "googleapis": "^73.0.0"
   }
 }
