@@ -11,12 +11,16 @@ You need an updated version of Node.js (>=16.9.0)
 
 - run ```npm install```
 
+- Create a seedGen Folder with a MinishCap randomizer CLI inside it, an EU Minish cap ROM, and an empty "generated" folder. Make sure the bot has a full acess to that folder.
+
 - add a .env file which will store the app parameters:
   - GAPI_TOKEN = GOOGLE API CALENDAR TOKEN
   - BOT_TOKEN = DISCORD BOT TOKEN
   - BOT_ID = DISCORD APP ID
   - RANDO_INFO_ID = RANDO INFO CHANNEL ID
   - RACING_ANNOUNCEMENTS_CHANNEL_ID = RACING ANNOUCEMENTS CHANNEL ID
+  - SEEDGEN_FOLDER = PATH TO THE SEEDGEN FOLDER
+
 
 - run the Bot with ```node .``` in the main folder.
 

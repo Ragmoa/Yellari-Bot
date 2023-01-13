@@ -11,6 +11,7 @@ import yellariWeeklyCommand from './commands/weeklyCommand.js';
 import yellariUTCCommand from './commands/utcCommand.js';
 import yellariFAQCommand from './commands/faqCommand.js';
 import yellariCasualCommand from './commands/casualCommand.js';
+import yellariSeedCommand from './commands/seedCommand.js';
 
 const commandList=[
 	{
@@ -52,6 +53,17 @@ const commandList=[
 	{
 		name: "faq",
 		description: "Displays a link to the FAQ and general informations"
+	},
+	{ name: "seed",
+	  description: "Generates a seed with specified settings string",
+	  options:[
+		{
+			name:"settings_string",
+			description: "String settings",
+			required: false,
+			type: 3
+		}
+	  ]
 	}
 ]
 
@@ -85,6 +97,9 @@ client.on('interactionCreate',  async interaction => {
 		case 'casual':{
 			yellariCasualCommand(interaction)
 			break;
+		} 
+		case 'seed':{
+			yellariSeedCommand(interaction)
 		}
 			
 	}
